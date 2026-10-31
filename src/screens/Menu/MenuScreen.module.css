@@ -1,0 +1,53 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2.5vw, var(--space-md));
+  height: 100%;
+  padding: clamp(16px, 3vw, var(--space-md)) clamp(16px, 4vw, var(--space-lg));
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.brand {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  font-weight: 800;
+  color: var(--color-primary);
+  text-align: right;
+}
+
+.title {
+  font-size: clamp(1.6rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/*
+ * As many columns as fit, each at least 200px wide: 2 on phones,
+ * 3-4 on tablets and portrait kiosks, 5+ on wide screens.
+ * Only the tiles scroll; min-height: 0 lets the grid shrink to the
+ * space left instead of growing past the screen and getting cut off.
+ */
+.grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  /* Rows keep the tile's full height (tiles clip overflow, so without
+     this the rows get squashed to fit instead of the grid scrolling). */
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: clamp(12px, 2vw, var(--space-md));
+  overflow-y: auto;
+  padding-bottom: var(--space-md);
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,30 @@
+:root {
+  --color-primary: #ff6b2c;
+  --color-primary-dark: #e5551a;
+  --color-text: #1d1b22;
+  --color-text-muted: #6b6375;
+  --color-bg: #fff8f3;
+  --color-surface: #ffffff;
+  --color-border: #ece6e0;
+
+  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  --radius-md: 16px;
+  --radius-pill: 999px;
+
+  --space-sm: 12px;
+  --space-md: 24px;
+  --space-lg: 48px;
+
+  --shadow-lg: 0 20px 40px -12px rgba(229, 85, 26, 0.35);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text: #f5f3f7;
+    --color-text-muted: #a29cab;
+    --color-bg: #16141a;
+    --color-surface: #221f27;
+    --color-border: #34303b;
+  }
+}

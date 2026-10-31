@@ -1,0 +1,29 @@
+/* Global on purpose: these rules hide the app and show only the print area. */
+
+@media screen {
+  .print-root {
+    display: none;
+  }
+}
+
+@media print {
+  /* No fixed paper size: the printer driver decides (58mm, 80mm, A4, Letter...). */
+  @page {
+    margin: 4mm;
+  }
+
+  #root {
+    display: none !important;
+  }
+
+  .print-root {
+    display: block;
+  }
+
+  html,
+  body {
+    height: auto;
+    background: #fff !important;
+    color: #000 !important;
+  }
+}

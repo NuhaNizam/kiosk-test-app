@@ -1,0 +1,81 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 107, 44, 0.18), transparent 60%),
+    var(--color-bg);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  text-align: center;
+}
+
+.greeting {
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.tagline {
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  color: var(--color-text-muted);
+}
+
+.cta {
+  margin-top: var(--space-md);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.hint {
+  color: var(--color-text-muted);
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-sm);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta {
+    animation: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .screen {
+    padding: var(--space-md);
+  }
+}
