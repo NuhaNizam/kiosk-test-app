@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/common/Button'
 import { KIOSK_CONFIG, LANGUAGES, WELCOME_TEXT } from '@/config/kiosk.config'
+import { DevVersionButton } from '@/features/developer'
 import { TestPrintButton } from '@/features/printing'
 import { Clock } from './components/Clock'
 import { LanguageSelector } from './components/LanguageSelector'
@@ -14,7 +15,10 @@ export function WelcomeScreen({ onStart }) {
     <section className={styles.screen}>
       <header className={styles.header}>
         <span className={styles.brand}>{KIOSK_CONFIG.brandName}</span>
-        <Clock locale={language} />
+        <div className={styles.headerEnd}>
+          <Clock locale={language} />
+          <DevVersionButton />
+        </div>
       </header>
 
       <div className={styles.hero}>

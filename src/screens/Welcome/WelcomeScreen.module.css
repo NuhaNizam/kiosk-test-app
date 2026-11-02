@@ -14,6 +14,13 @@
   align-items: center;
 }
 
+/* Clock with the Developer version button to its right. */
+.headerEnd {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
 .brand {
   font-size: 1.5rem;
   font-weight: 800;

@@ -10,7 +10,9 @@ export function TestPrintButton() {
   // Print only after the receipt has rendered into the portal.
   useEffect(() => {
     if (!printedAt) return
-    printPage().then(() => setPrintedAt(null))
+    printPage()
+      .catch((error) => console.error('Print failed:', error))
+      .finally(() => setPrintedAt(null))
   }, [printedAt])
 
   return (

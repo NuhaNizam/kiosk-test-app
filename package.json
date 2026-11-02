@@ -3,10 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "kiosk": "node scripts/start-kiosk.js",
     "kiosk:window": "node scripts/start-kiosk.js --windowed",
+    "electron": "node scripts/start-electron.js",
+    "electron:window": "node scripts/start-electron.js --windowed",
+    "electron:prod": "vite build && node scripts/start-electron.js --prod",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -20,6 +24,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "electron": "^45.2.1",
     "eslint": "^10.13.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",

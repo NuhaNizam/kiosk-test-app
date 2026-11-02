@@ -2,4 +2,4 @@
 export { TestPrintButton } from './components/TestPrintButton'
 export { PrintPortal } from './components/PrintPortal'
 export { TestReceipt } from './components/TestReceipt'
-export { printPage } from './services/printService'
+export { isSilentPrintAvailable, printPage } from './services/printService'
