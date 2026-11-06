@@ -1,0 +1,146 @@
+/* Chrome's light / dark frame colours. Keep the tab strip colour in sync
+   with titleBarOverlay in electron/main.js. */
+.frame {
+  --strip-bg: #dee1e6;
+  --tab-bg: #ffffff;
+  --toolbar-bg: #ffffff;
+  --omnibox-bg: #f1f3f4;
+  --frame-text: #202124;
+  --frame-muted: #5f6368;
+  --frame-border: #dadce0;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: var(--frame-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  .frame {
+    --strip-bg: #202124;
+    --tab-bg: #35363a;
+    --toolbar-bg: #35363a;
+    --omnibox-bg: #202124;
+    --frame-text: #e8eaed;
+    --frame-muted: #9aa0a6;
+    --frame-border: #3c4043;
+  }
+}
+
+/* Same height as titleBarOverlay, so the window buttons line up. */
+.tabStrip {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 40px;
+  flex-shrink: 0;
+  /* Leave room for the minimize / maximize / close buttons. */
+  padding: 0 calc(100% - env(titlebar-area-width, calc(100% - 140px))) 0 8px;
+  background: var(--strip-bg);
+  -webkit-app-region: drag;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 240px;
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px 0 12px;
+  border-radius: 8px 8px 0 0;
+  background: var(--tab-bg);
+  font-size: 12px;
+}
+
+.favicon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.tabTitle {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tabClose,
+.newTab {
+  color: var(--frame-muted);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.newTab {
+  align-self: center;
+  padding: 0 8px;
+  font-size: 20px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--frame-border);
+  background: var(--toolbar-bg);
+}
+
+.navButton {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--frame-text);
+  font-size: 18px;
+  cursor: pointer;
+
+  &:disabled {
+    color: var(--frame-muted);
+    opacity: 0.5;
+    cursor: default;
+  }
+  &:not(:disabled):hover {
+    background: var(--omnibox-bg);
+  }
+}
+
+.omnibox {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  height: 30px;
+  margin-left: 4px;
+  padding: 0 14px;
+  border-radius: 15px;
+  background: var(--omnibox-bg);
+  font-size: 14px;
+}
+
+.siteInfo {
+  color: var(--frame-muted);
+}
+
+.address {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Scrolls if the screen is too short for the page below the frame. */
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}

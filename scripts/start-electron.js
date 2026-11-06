@@ -4,9 +4,10 @@
 //   npm run electron           Welcome in a normal window, then full screen
 //                              (exit with Alt+F4)
 //   npm run electron:window    always a normal window
-//   npm run electron:prod      builds, then loads dist/ (no dev server)
+//   npm run electron:prod      builds ui/, then loads it (no dev server)
 
 import { spawn, spawnSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 import electronPath from 'electron'
 
 const DEV_URL = 'http://localhost:5173'
@@ -54,7 +55,9 @@ const stopDevServer = args.includes('--prod') ? () => {} : await ensureDevServer
 const env = { ...process.env }
 delete env.ELECTRON_RUN_AS_NODE
 
-const electron = spawn(electronPath, ['.', ...args], { stdio: 'inherit', env })
+// The Electron app lives in app/ (its own package.json).
+const appDir = fileURLToPath(new URL('../app', import.meta.url))
+const electron = spawn(electronPath, [appDir, ...args], { stdio: 'inherit', env })
 // Closing the kiosk window also stops the dev server started above.
 electron.on('exit', (code) => {
   stopDevServer()

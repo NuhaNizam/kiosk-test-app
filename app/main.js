@@ -4,15 +4,24 @@
 //   npm run electron           Welcome screen in a normal (maximized) window,
 //                              every other screen full-screen kiosk
 //   npm run electron:window    always a normal window, still prints silently
-//   npm run electron:prod      builds the app and loads dist/ (no dev server)
+//   npm run electron:prod      builds the app, loads the UI from the UI server
+//                              (falls back to ui/dist/), no dev server
+//   npm run dist               builds the Windows installer into release/
+//
+// The installed app starts with Windows and updates itself (see updater.js).
+// Its UI loads from a web server and updates without a new installer (see
+// ui.js).
 //
 // Printer: set KIOSK_PRINTER to a printer name (as shown in Windows
 // "Printers & scanners"); otherwise the Windows default printer is used.
 
-import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, nativeTheme, shell } from 'electron'
 import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
+import { setOnWelcome } from './idle.js'
+import { loadUi } from './ui.js'
+import { startAutoUpdates } from './updater.js'
 
 const DEV_URL = process.env.KIOSK_URL ?? 'http://localhost:5173'
 const PRINTER_NAME = process.env.KIOSK_PRINTER ?? ''
@@ -20,7 +29,16 @@ const PRINTER_NAME = process.env.KIOSK_PRINTER ?? ''
 const windowed = process.argv.includes('--windowed')
 const useBuild = app.isPackaged || process.argv.includes('--prod')
 
-const appDir = fileURLToPath(new URL('..', import.meta.url))
+// app/ (this folder) and the project root above it.
+const appDir = fileURLToPath(new URL('.', import.meta.url))
+const rootDir = join(appDir, '..')
+
+// The UI built into the app, shown when the UI server can't be reached:
+// copied into the installer's resources/ui (package.json "extraResources"),
+// or ui/dist when running from the project.
+const bundledUi = app.isPackaged
+  ? join(process.resourcesPath, 'ui', 'index.html')
+  : join(rootDir, 'ui', 'dist', 'index.html')
 
 // Electron prints to the Windows default printer when no deviceName is
 // given. A KIOSK_PRINTER name is checked first so a typo fails loudly
@@ -73,7 +91,9 @@ ipcMain.handle('kiosk:print', async (event, page) => {
 // The app asks for full screen when it leaves the Welcome screen and for a
 // normal window when it returns. Kiosk mode also stops customers leaving
 // full screen. Ignored with --windowed, which is for testing.
+// Full screen off = Welcome screen, where updates may install.
 ipcMain.handle('kiosk:fullscreen', (event, on) => {
+  setOnWelcome(!on)
   if (windowed) return
   BrowserWindow.fromWebContents(event.sender)?.setKiosk(!!on)
 })
@@ -95,7 +115,7 @@ ipcMain.handle('kiosk:openDevVersion', async () => {
     if (app.isPackaged) throw new Error(`The dev server is not running at ${DEV_URL}.`)
 
     spawn('cmd.exe', ['/c', 'start', 'Kiosk dev server', 'cmd', '/k', 'npm run dev'], {
-      cwd: appDir,
+      cwd: rootDir,
       detached: true,
       stdio: 'ignore',
     }).unref()
@@ -123,22 +143,35 @@ function createWindow() {
     height: 1920,
     show: false,
     autoHideMenuBar: true,
+    // No native title bar: the Welcome screen draws a Chrome-like tab strip
+    // (BrowserFrame) and Windows draws minimize / maximize / close over it.
+    // Other screens are full screen, where none of this shows.
+    // Colours and height match BrowserFrame.module.css.
+    titleBarStyle: 'hidden',
+    titleBarOverlay: nativeTheme.shouldUseDarkColors
+      ? { color: '#202124', symbolColor: '#e8eaed', height: 40 }
+      : { color: '#dee1e6', symbolColor: '#202124', height: 40 },
     backgroundColor: '#ffffff',
     webPreferences: {
-      preload: join(appDir, 'electron', 'preload.cjs'),
+      preload: join(appDir, 'preload.cjs'),
+      // So a UI from the server can tell which shell it runs in.
+      additionalArguments: [`--kiosk-shell-version=${app.getVersion()}`],
     },
   })
   win.maximize()
   win.show()
 
   // A (re)load always starts on the Welcome screen, so leave full screen.
-  win.webContents.on('did-finish-load', () => win.setKiosk(false))
+  win.webContents.on('did-finish-load', () => {
+    win.setKiosk(false)
+    setOnWelcome(true)
+  })
 
   // Customers can't open pop-ups or other sites.
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
 
   if (useBuild) {
-    win.loadFile(join(appDir, 'dist', 'index.html'))
+    loadUi(win, bundledUi)
   } else {
     win.loadURL(DEV_URL)
   }
@@ -150,6 +183,12 @@ if (!app.requestSingleInstanceLock()) {
 } else {
   if (!windowed) Menu.setApplicationMenu(null)
 
-  app.whenReady().then(createWindow)
+  // The installed kiosk starts when Windows signs in.
+  if (app.isPackaged) app.setLoginItemSettings({ openAtLogin: true })
+
+  app.whenReady().then(() => {
+    createWindow()
+    startAutoUpdates()
+  })
   app.on('window-all-closed', () => app.quit())
 }

@@ -2,7 +2,7 @@
 // (`npm run dev`) in the normal web browser, with hot reload and DevTools.
 //
 // - Electron: starts the dev server if it isn't running, then opens it in
-//   the default browser (see 'kiosk:openDevVersion' in electron/main.js).
+//   the default browser (see 'kiosk:openDevVersion' in app/main.js).
 // - Browser: opens it in a new tab (the dev server must already be running).
 
 export const DEV_URL = 'http://localhost:5173'

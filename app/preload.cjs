@@ -3,7 +3,15 @@
 
 const { contextBridge, ipcRenderer } = require('electron')
 
+const SHELL_VERSION_ARG = '--kiosk-shell-version='
+
 contextBridge.exposeInMainWorld('kiosk', {
+  /**
+   * Version of the installed kiosk app (e.g. "1.0.4"). The UI comes from a
+   * server and can be newer than the app: check this before using a
+   * function that older apps don't have.
+   */
+  shellVersion: process.argv.find((arg) => arg.startsWith(SHELL_VERSION_ARG))?.slice(SHELL_VERSION_ARG.length),
   /**
    * Prints the current page silently on a page of the given size
    * ({ widthMm, heightMm, marginMm }). Resolves with { printer }.

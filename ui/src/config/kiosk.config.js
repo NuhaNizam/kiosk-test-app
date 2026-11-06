@@ -12,5 +12,5 @@ export const LANGUAGES = [
 ]
 
 export const WELCOME_TEXT = {
-  en: { greeting: 'Welcome', cta: 'Touch to start', hint: 'Tap the button to begin your order' }
+  en: { greeting: 'Hello', cta: 'Touch to start', hint: 'Tap the button to begin your order' }
 }

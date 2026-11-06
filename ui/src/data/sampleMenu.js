@@ -10,7 +10,7 @@ export const CATEGORIES = [
 ]
 
 export const MENU_ITEMS = [
-  { id: 'b1', categoryId: 'burgers', name: 'Classic Burger', description: 'Beef patty, cheese, lettuce, tomato', price: 6.5, image: '🍔' },
+  { id: 'b1', categoryId: 'burgers', name: 'Classiccccc Burger', description: 'Beef patty, cheese, lettuce, tomato', price: 6.5, image: '🍔' },
   { id: 'b2', categoryId: 'burgers', name: 'Chicken Burger', description: 'Crispy chicken, mayo, pickles', price: 6.0, image: '🍔' },
   { id: 'b3', categoryId: 'burgers', name: 'Veggie Burger', description: 'Plant-based patty, avocado', price: 5.75, image: '🥬' },
   { id: 'b4', categoryId: 'burgers', name: 'Double Cheese', description: 'Two patties, double cheese', price: 8.25, image: '🍔' },

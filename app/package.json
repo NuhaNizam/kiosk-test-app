@@ -1,0 +1,49 @@
+{
+  "name": "kiosk-test-app",
+  "productName": "Self-Service Kiosk",
+  "description": "Self-service kiosk with silent receipt printing",
+  "author": "Delivergate",
+  "private": true,
+  "version": "1.0.6",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "dist": "electron-builder --win"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
+  },
+  "devDependencies": {
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "lk.delivergate.kiosk",
+    "electronVersion": "45.2.1",
+    "directories": {
+      "output": "../release"
+    },
+    "files": [
+      "*.js",
+      "*.cjs",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../ui/dist",
+        "to": "ui"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false
+    },
+    "publish": {
+      "provider": "generic",
+      "url": "http://localhost:8080/"
+    }
+  }
+}
